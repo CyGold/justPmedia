@@ -39,6 +39,12 @@
   font-size: 150%;
   color: #2e3a53;
 }
+.logo {
+  width: 20px;
+}
+.sap {
+  width: 5%;
+}
 
 .button1 {
   background-color: white;
@@ -221,8 +227,9 @@ h3 {
   }
   .social{
     width: 50%;
+    object-fit: cover ;
   }
   .text3{
-
   }
 }
+
