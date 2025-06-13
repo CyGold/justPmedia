@@ -40,11 +40,9 @@
   color: #2e3a53;
 }
 .logo {
-  width: 20px;
+  width: 5px;
 }
-.sap {
-  width: 5%;
-}
+
 
 .button1 {
   background-color: white;
@@ -223,11 +221,13 @@ h3 {
     justify-content: center;
   }
   .sap{
-    width: 55%;
+    width: 1%;
   }
   .social{
     width: 50%;
     object-fit: cover ;
+     justify-content: center; 
+    align-items: center;
   }
   .text3{
   }
