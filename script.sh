@@ -8,7 +8,9 @@ RESOURCE_GROUP="myResourceGroup" # Name of the resource group
 STORAGE_ACCOUNT="staticweb$RANDOM"  # Unique name for the storage account
 LOCATION="eastus" 
 CONTAINER_NAME="\$web"  # reserved container for static websites
-LOCAL_FOLDER="./site"  # Replace with your website folder /mnt/c/Users/Hp/Desktop/projects/capstone/website/justPmedia
+LOCAL_FOLDER="/mnt/c/Users/Hp/Desktop/projects/capstone/website/justPmedia/website"  # Replace with your website folder /mnt/c/Users/Hp/Desktop/projects/capstone/website/justPmedia
+SP_NAME="github-actions-static"  # service principal name.
+
 
 # error handling function
 handle_error() {
@@ -16,11 +18,6 @@ handle_error() {
     exit 1
 }
 trap 'handle_error $LINENO' ERR
-
-# azure login
-az login --only-show-errors > /dev/null
-
-echo "Azure CLI login successful."
 
 # Check if local folder exists
 if [ ! -d "$LOCAL_FOLDER" ]; then
@@ -53,5 +50,21 @@ echo "Your static website is hosted at: $PUBLIC_URL"
 
 sleep 5
 
-az ad sp create-for-rbac --name "github-actions-deployer" --role Contributor --scopes /subscriptions/<YOUR_SUBSCRIPTION_ID>/resourceGroups/<YOUR_RESOURCE_GROUP_NAME> --sdk-auth
-echo "Service principal created for GitHub Actions deployment."
+# Prompt for the subscription ID.
+read -p "Enter your Subscription ID: " SUBSCRIPTION_ID
+
+# Construct the scope string.
+SCOPE="/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${RESOURCE_GROUP}"
+
+# Notify the user about the process start.
+echo "Creating service principal '$SP_NAME' with scope '$SCOPE'..."
+
+# Create the service principal and output the JSON credentials.
+az ad sp create-for-rbac --name "$SP_NAME" --role Contributor --scopes "$SCOPE" --sdk-auth
+
+# Check if the command was successful.
+if [ $? -eq 0 ]; then
+    echo "✅ Service principal created successfully."
+else
+    echo "❌ Failed to create the service principal."
+fi
