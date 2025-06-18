@@ -26,7 +26,7 @@ jobs:
         inlineScript: |
           RESOURCE_GROUP="myResourceGroup"
           STORAGE_ACCOUNT="staticwebprod"
-          LOCAL_FOLDER="site"
+          LOCAL_FOLDER="website"
 
           echo "💡 Enabling static website (safe to repeat)..."
           az storage blob service-properties update \
