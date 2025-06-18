@@ -8,9 +8,10 @@ RESOURCE_GROUP="myResourceGroup" # Name of the resource group
 STORAGE_ACCOUNT="staticweb$RANDOM"  # Unique name for the storage account
 LOCATION="eastus" 
 CONTAINER_NAME="\$web"  # reserved container for static websites
-LOCAL_FOLDER="/mnt/c/Users/Hp/Desktop/projects/capstone/website/justPmedia/website"  # Replace with your website folder /mnt/c/Users/Hp/Desktop/projects/capstone/website/justPmedia
+LOCAL_FOLDER="/mnt/c/Users/Hp/Desktop/projects/capstone/website/justPmedia/website" 
 SP_NAME="github-actions-static"  # service principal name.
 
+az login
 
 # error handling function
 handle_error() {
@@ -40,7 +41,8 @@ az storage blob service-properties update --account-name $STORAGE_ACCOUNT --stat
 echo "Static website hosting enabled for storage account: $STORAGE_ACCOUNT"
 
 # Upload files to Blob Storage
-az storage blob upload-batch --account-name $STORAGE_ACCOUNT --destination $CONTAINER_NAME --source $LOCAL_FOLDER --overwrite
+
+az storage blob upload-batch --account-name $STORAGE_ACCOUNT --destination $CONTAINER_NAME --source $LOCAL_FOLDER --auth-mode login
 echo "Files uploaded to $STORAGE_ACCOUNT."
 
 sleep 5 

@@ -1,0 +1,49 @@
+name: Deploy Static Website to Azure Blob Storage
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'website/**' 
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 📥 Checkout repository
+      uses: actions/checkout@v4
+
+    - name: 🔐 Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: 📤 Upload static files to Azure Blob Storage
+      uses: azure/CLI@v1
+      with:
+        inlineScript: |
+          RESOURCE_GROUP="myResourceGroup"
+          STORAGE_ACCOUNT="staticwebprod"
+          LOCAL_FOLDER="site"
+
+          echo "💡 Enabling static website (safe to repeat)..."
+          az storage blob service-properties update \
+            --account-name $STORAGE_ACCOUNT \
+            --static-website \
+            --index-document index.html
+
+          echo "⏫ Uploading updated files..."
+          az storage blob upload-batch \
+            --account-name $STORAGE_ACCOUNT \
+            --destination \$web \
+            --source $LOCAL_FOLDER \
+            --overwrite
+
+          echo "✅ Deployment complete!"
+          PUBLIC_URL=$(az storage account show \
+            --name $STORAGE_ACCOUNT \
+            --query "primaryEndpoints.web" \
+            --output tsv)
+          echo "🌍 Website URL: $PUBLIC_URL"
