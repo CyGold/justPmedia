@@ -12,6 +12,8 @@ A working static website hosted in Azure Storage. Learn how to host a static web
 HTML Content: Your static website files (e.g., index.html, 404.html) stored in a repository connected to Azure DevOps.
 
 [text](https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blobs-static-site-github-actions?source=recommendations&tabs=openid)
+-Assign an appropriate role to your service principal by Azure portal, Azure CLI, or Azure PowerShell.
+Configure a federated identity credential on a Microsoft Entra application to trust tokens issued by GitHub Actions to your GitHub repository.
 chmod +x deploy_static.sh
 ./deploy_static.sh
 az ad sp list --output table
