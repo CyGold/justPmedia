@@ -1,15 +1,25 @@
+#PREREQUSITE
+
+-An Azure account with an active subscription. Create an account for free.
+-A GitHub repository with your static website code.
+-A working static website hosted in Azure Storage. Learn how to host a static website in Azure Storage. To follow this example, you should also deploy Azure CDN.
+
+##SERVICE PRINCIPAL ##
+In GitHub, go to your repository.
+Go to Settings in the navigation menu.
+Select Security > Secrets and variables > Actions.
+Select New repository secret.
+Paste the entire JSON output from the Azure CLI command into the secret's value field. Give the secret the name AZURE_CREDENTIALS.
+Select Add secret.
+
+@@@Use the Azure CLI action to upload your code to blob storage and to purge your CDN endpoint. For az storage blob upload-batch, replace the placeholder with your storage account name. The script will upload to the $web container. For az cdn endpoint purge, replace the placeholders with your CDN profile name, CDN endpoint name, and resource group. To speed up your CDN purge, you can add the --no-wait option to az cdn endpoint purge. To enhance security, you can also add the --account-key option with your storage account key.@@@
+
 Create and configure an Azure Storage Account with Static Website hosting enabled.
 Create a Service Principal (App Registration) in Microsoft Entra ID (formerly Azure Active Directory).
 Assign appropriate roles to the Service Principal for accessing the storage account.
 Set up a Service Connection in Azure DevOps using the Service Principal.
 Create a Release Pipeline in Azure DevOps to deploy your static website.
-##prerequsiite
-Prerequisites
-Azure Subscription: Access to an Azure subscription with permissions to create resources.
-An Azure account with an active subscription. Create an account for free.
-A GitHub repository with your static website code. If you do not have a GitHub account, sign up for free.
-A working static website hosted in Azure Storage. Learn how to host a static website in Azure Storage. To follow this example, you should also deploy Azure CDN.
-HTML Content: Your static website files (e.g., index.html, 404.html) stored in a repository connected to Azure DevOps.
+
 
 [text](https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blobs-static-site-github-actions?source=recommendations&tabs=openid)
 -Assign an appropriate role to your service principal by Azure portal, Azure CLI, or Azure PowerShell.
