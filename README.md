@@ -16,7 +16,7 @@
 
 1. Clone the repository:
      ```bash
-   git clone https://github.com/CyGold/weather-dashboard-demo.git
+   git clone https://github.com/CyGold/justPmedia.git
 2. make the script executable
      ```bash
    chmod +x script.sh
