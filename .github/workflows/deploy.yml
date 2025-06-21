@@ -9,6 +9,7 @@ on:
 
 jobs:
   deploy:
+    name: Upload to Azure Blob Storage
     runs-on: ubuntu-latest
 
     steps:
@@ -18,12 +19,13 @@ jobs:
       - name: Upload files to Azure Blob Storage
         uses: azure/CLI@v2
         with:
-          azcliversion: 2.59.0  # optional
+          azcliversion: 2.59.0  # Optional: pin a stable CLI version
           inlineScript: |
+            echo "Uploading static website files to Azure Blob Storage..."
             az storage blob upload-batch \
               --account-name "$AZURE_STORAGE_ACCOUNT" \
               --account-key "$AZURE_STORAGE_KEY" \
-              --destination "\$web" \
+              --destination '$web' \
               --source "./website" \
               --overwrite
         env:
