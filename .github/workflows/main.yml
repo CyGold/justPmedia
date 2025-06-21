@@ -1,36 +1,31 @@
 name: Deploy Static Website to Azure
 
 on: 
-push:
-  
+  push:
     branches:
       - main
     paths:
-      - 'website/**'  # Trigger only if files in 'site/' change
+      - 'website/**'  # Trigger only when files in 'website/' change
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up Azure CLI
-      uses: azure/CLI@v2
+      - name: Set up Azure CLI
+        uses: azure/CLI@v2
 
-    - name: Run deployment script
-      env:
-        AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}
-        AZURE_STORAGE_KEY: ${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }}
-      run: |
-        az storage blob upload-batch \
-          --account-name "$AZURE_STORAGE_ACCOUNT" \
-          --account-key "$AZURE_STORAGE_KEY" \
-          --destination "\$web" \
-          --source "./website" \
-          --overwrite
-          
-# File: .github/workflows/workflow.yml
-
-
+      - name: Upload files to Azure Blob Storage
+        env:
+          AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}
+          AZURE_STORAGE_KEY: ${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }}
+        run: |
+          az storage blob upload-batch \
+            --account-name "$AZURE_STORAGE_ACCOUNT" \
+            --account-key "$AZURE_STORAGE_KEY" \
+            --destination '$web' \
+            --source "./website" \
+            --overwrite
