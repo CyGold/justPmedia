@@ -1,7 +1,7 @@
 name: Deploy Static Website to Azure
 
-on:
-  push:
+on: [push]
+  
     branches:
       - main
     paths:
@@ -27,5 +27,9 @@ jobs:
           --account-name "$AZURE_STORAGE_ACCOUNT" \
           --account-key "$AZURE_STORAGE_KEY" \
           --destination "\$web" \
-          --source "./site" \
+          --source "./website" \
           --overwrite
+          
+# File: .github/workflows/workflow.yml
+
+
