@@ -19,7 +19,7 @@ jobs:
       - name: Upload files to Azure Blob Storage
         uses: azure/CLI@v2
         with:
-          azcliversion: 2.59.0  # Optional: pin a stable CLI version
+          azcliversion: 2.59.0 
           inlineScript: |
             echo "Uploading static website files to Azure Blob Storage..."
             az storage blob upload-batch \

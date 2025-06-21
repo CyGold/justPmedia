@@ -8,7 +8,7 @@ RESOURCE_GROUP="myResourceGroup" # Name of the resource group
 STORAGE_ACCOUNT="staticweb$RANDOM"  # Uniqu2e name for the storage account
 LOCATION="eastus" 
 CONTAINER_NAME="\$web"  # reserved container for static websites
-LOCAL_FOLDER="/mnt/c/Users/Hp/Desktop/projects/capstone/website/justPmedia/website" 
+LOCAL_FOLDER="${LOCAL_FOLDER:-/mnt/c/Users/Hp/Desktop/projects/capstone/website/justPmedia}" 
 SP_NAME="github-actions-static"  # service principal name.
 
 # Login to Azure (interactive or use az login --service-principal for CI)
@@ -52,7 +52,7 @@ PUBLIC_URL=$(az storage account show --name $STORAGE_ACCOUNT --query "primaryEnd
 echo "Your static website is hosted at: $PUBLIC_URL"
 
 # view storage account keys
-az storage account keys list --account-name $STORAGE_ACCOUNT --resource-group myResourceGroup --query "[0].value" --output tsv
+az storage account keys list --account-name $STORAGE_ACCOUNT --resource-group $RESOURCE_GROUP --query "[0].value" --output tsv
 
 #sleep 5
 
