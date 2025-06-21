@@ -1,31 +1,31 @@
-name: Static website CI
+name: Deploy Static Website to Azure
 
 on:
-    push:
-        branches: [ main ]
+  push:
+    branches:
+      - main
+    paths:
+      - 'website/**'  # Trigger only if files in 'site/' change
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v3
-    - uses: azure/login@v2
-      with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-    - name: Upload to blob storage
-      uses: azure/CLI@v1
-      with:
-        inlineScript: |
-            az storage blob upload-batch --account-name <STORAGE_ACCOUNT_NAME> --auth-mode key -d '$web' -s .
-    - name: Purge CDN endpoint
-      uses: azure/CLI@v1
-      with:
-        inlineScript: |
-           az cdn endpoint purge --content-paths  "/*" --profile-name "CDN_PROFILE_NAME" --name "CDN_ENDPOINT" --resource-group "RESOURCE_GROUP"
+    - name: Set up Azure CLI
+      uses: azure/CLI@v2
 
-  # Azure logout
-    - name: logout
+    - name: Run deployment script
+      env:
+        AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}
+        AZURE_STORAGE_KEY: ${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }}
       run: |
-            az logout
-      if: always()
+        az storage blob upload-batch \
+          --account-name "$AZURE_STORAGE_ACCOUNT" \
+          --account-key "$AZURE_STORAGE_KEY" \
+          --destination "\$web" \
+          --source "./site" \
+          --overwrite

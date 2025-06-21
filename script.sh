@@ -5,13 +5,14 @@ set -o pipefail  # Catch errors in piped commands
 
 # Variables
 RESOURCE_GROUP="myResourceGroup" # Name of the resource group
-STORAGE_ACCOUNT="staticweb$RANDOM"  # Unique name for the storage account
+STORAGE_ACCOUNT="staticweb$RANDOM"  # Uniqu2e name for the storage account
 LOCATION="eastus" 
 CONTAINER_NAME="\$web"  # reserved container for static websites
 LOCAL_FOLDER="/mnt/c/Users/Hp/Desktop/projects/capstone/website/justPmedia/website" 
 SP_NAME="github-actions-static"  # service principal name.
 
-az login
+# Login to Azure (interactive or use az login --service-principal for CI)
+ az login --tenant 6b0e55c9-0cae-427c-876f-57cf36e7cc6b
 
 # error handling function
 handle_error() {
@@ -33,7 +34,7 @@ az group create --name $RESOURCE_GROUP --location $LOCATION
 echo "$RESOURCE_GROUP created successfully."
 
 # Create storage account
-az storage account create --name $STORAGE_ACCOUNT --resource-group $RESOURCE_GROUP --location eastus --sku Standard_LRS --kind StorageV2
+az storage account create --name $STORAGE_ACCOUNT --resource-group $RESOURCE_GROUP --location $LOCATION --sku Standard_LRS --kind StorageV2
 echo "$STORAGE_ACCOUNT created successfully."
 
 # Enable static website hosting
@@ -42,7 +43,7 @@ echo "Static website hosting enabled for storage account: $STORAGE_ACCOUNT"
 
 # Upload files to Blob Storage
 
-az storage blob upload-batch --account-name $STORAGE_ACCOUNT --destination $CONTAINER_NAME --source $LOCAL_FOLDER --auth-mode login
+az storage blob upload-batch --account-name $STORAGE_ACCOUNT --destination $CONTAINER_NAME --source $LOCAL_FOLDER 
 echo "Files uploaded to $STORAGE_ACCOUNT."
 
 sleep 5 
@@ -50,23 +51,26 @@ sleep 5
 PUBLIC_URL=$(az storage account show --name $STORAGE_ACCOUNT --query "primaryEndpoints.web" --output tsv)
 echo "Your static website is hosted at: $PUBLIC_URL"
 
-sleep 5
+# view storage account keys
+az storage account keys list --account-name $STORAGE_ACCOUNT --resource-group myResourceGroup --query "[0].value" --output tsv
 
-# Prompt for the subscription ID.
-read -p "Enter your Subscription ID: " SUBSCRIPTION_ID
+#sleep 5
+
+##Prompt for the subscription ID.
+#read -p "Enter your Subscription ID: " SUBSCRIPTION_ID
 
 # Construct the scope string.
-SCOPE="/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${RESOURCE_GROUP}"
+#SCOPE="/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${RESOURCE_GROUP}"
 
 # Notify the user about the process start.
-echo "Creating service principal '$SP_NAME' with scope '$SCOPE'..."
+#echo "Creating service principal '$SP_NAME' with scope '$SCOPE'..."
 
 # Create the service principal and output the JSON credentials.
-az ad sp create-for-rbac --name "$SP_NAME" --role Contributor --scopes "$SCOPE" --sdk-auth
+#az ad sp create-for-rbac --name "$SP_NAME" --role Contributor --scopes "$SCOPE" --sdk-auth
 
 # Check if the command was successful.
-if [ $? -eq 0 ]; then
-    echo "✅ Service principal created successfully."
-else
-    echo "❌ Failed to create the service principal."
-fi
+#if [ $? -eq 0 ]; then
+ #   echo "✅ Service principal created successfully."
+#else
+ #   echo "❌ Failed to create the service principal."
+#fi

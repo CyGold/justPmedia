@@ -3,6 +3,9 @@
 -An Azure account with an active subscription. Create an account for free.
 -A GitHub repository with your static website code.
 -A working static website hosted in Azure Storage. Learn how to host a static website in Azure Storage. To follow this example, you should also deploy Azure CDN.
+#robust and fail safe deployment script
+#chmod +x deploy.sh
+
 
 ##SERVICE PRINCIPAL ##
 In GitHub, go to your repository.
